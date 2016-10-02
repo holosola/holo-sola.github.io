@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Keywords" content="blog"/>
+    <meta name="Description" content="blog"/>
+    <title>Simple</title>
+    <link rel="shortcut icon" href="/static/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+<body>
+<div class="main">
+    <div class="header">
+    	<ul id="pages">
+            <li><a href="/">home</a></li>
+            <li><a href="/#/tags">tags</a></li>
+            <li><a href="/#/archive">archive</a></li>
+    	</ul>
+    </div>
+	<div class="wrap-header">
+	<h1>
+    <a href="/" id="title"></a>
+	</h1>
+	</div>
+<div id="md" style="display: none;">
+<!-- markdown -->
+##基本信息
+- 姓名:张宏伟
+- 性别:男
+- 年龄:21
+- 学校:湖南理工学院 
+- 时间2013/09-2017/06
+- 专业:网络工程
+- 学历:本科
+- 博客:[holo-sola.github.com](holo-sola.github.com)
+- 手机:15580108995
+- Email:[holosaber@gmail.com](mailto:holosaber@gmail.com)
+
+##求职意向
+PHP开发相关
+
+##个人能力
+- Web开发（PHP/HTML/CSS/JavaScript）
+- 日常使用Windows进行开发,云服务器使用Linux系统
+- 熟悉MySql数据库和基本Sql语言
+- 会使用Git和SVN等版本控制工具
+- 英语 CET-4
+- 软考初级证书
+
+##项目经验
+自学后端时写的一些小Demo
+##自我评价
+有较强的自学能力,喜欢Coding,喜欢折腾.典型理工男,对新事物充满好奇.同时工作态度认真负责,具有团队合作精神.
+
+##致谢
+感谢您花时间阅读我的简历，期待能有机会和您共事。
+<!-- markdown end -->
+</div>
+<div class="entry" id="main">
+<!-- content -->
+<h2 id="">基本信息</h2>
+
+<ul>
+<li>姓名:张宏伟</li>
+<li>性别:男</li>
+<li>年龄:21</li>
+<li>学校:湖南理工学院 </li>
+<li>时间2013/09-2017/06</li>
+<li>专业:网络工程</li>
+<li>学历:本科</li>
+<li>博客:<a href="holo-sola.github.com">holo-sola.github.com</a></li>
+<li>手机:15580108995</li>
+<li>Email:<a href="mailto:holosaber@gmail.com">holosaber@gmail.com</a></li>
+</ul>
+
+<h2 id="">求职意向</h2>
+
+<p>PHP开发相关</p>
+
+<h2 id="">个人能力</h2>
+
+<ul>
+<li>Web开发（PHP/HTML/CSS/JavaScript）</li>
+<li>日常使用Windows进行开发,云服务器使用Linux系统</li>
+<li>熟悉MySql数据库和基本Sql语言</li>
+<li>会使用Git和SVN等版本控制工具</li>
+<li>英语 CET-4</li>
+<li>软考初级证书</li>
+</ul>
+
+<h2 id="">项目经验</h2>
+
+<p>自学后端时写的一些小Demo</p>
+
+<h2 id="">自我评价</h2>
+
+<p>有较强的自学能力,喜欢Coding,喜欢折腾.典型理工男,对新事物充满好奇.同时工作态度认真负责,具有团队合作精神.</p>
+
+<h2 id="">致谢</h2>
+
+<p>感谢您花时间阅读我的简历，期待能有机会和您共事。</p>
+<!-- content end -->
+</div>
+<br>
+<br>
+    <div id="disqus_thread"></div>
+	<div class="footer">
+		<p>© Copyright 2014 by isnowfy, Designed by isnowfy</p>
+	</div>
+</div>
+<script src="main.js"></script>
+<script id="content" type="text/mustache">
+    <h1>{{title}}</h1>
+    <div class="tag">
+    {{date}}
+    {{#tags}}
+    <a href="/#/tag/{{name}}">#{{name}}</a>
+    {{/tags}}
+    </div>
+</script>
+<script id="pagesTemplate" type="text/mustache">
+    {{#pages}}
+    <li>
+        <a href="{{path}}">{{title}}</a>
+    </li>
+    {{/pages}}
+</script>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: "main.json",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            $("#title").html(data.name);
+            var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
+            var pagesHtml = pagesTemplate.render({"pages": data.pages});
+            $("#pages").append(pagesHtml);
+            //path
+            var path = "resume.html";
+            //path end
+            var now = 0;
+            for (var i = 0; i < data.posts.length; ++i)
+                if (path == data.posts[i].path)
+                    now = i;
+            var post = data.posts[now];
+            var tmp = post.tags.split(" ");
+            var tags = [];
+            for (var i = 0; i < tmp.length; ++i)
+                if (tmp[i].length > 0)
+                    tags.push({"name": tmp[i]});
+            var contentTemplate = Hogan.compile($("#content").html());
+            var contentHtml = contentTemplate.render({"title": post.title, "tags": tags, "date": post.date});
+            $("#main").prepend(contentHtml);
+            if (data.disqus_shortname.length > 0) {
+                var disqus_shortname = data.disqus_shortname;
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            }
+        }
+    });
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ["\\(", "\\)"]], processEscapes: true}});
+</script>
+</body>
+</html>
